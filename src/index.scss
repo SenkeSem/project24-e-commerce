@@ -41,7 +41,7 @@ header {
 
   p {
     width: 280px;
-    line-height: 24;
+    // line-height: 24; ????? Что это за конченый стиль, и почему он его добавил ?????
   }
 
   .greenButton {
@@ -60,6 +60,27 @@ header {
       transform: rotate(180deg);
       margin-right: 15px;
       transition: transform 0.15s ease-in-out;
+    }
+  }
+
+  .greenButton {
+    width: 70%;
+    height: 55px;
+    background: #9DD558;
+    border: 0;
+    border-radius: 18px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #FFFFFF;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+
+    &:hover {
+      background-color: lighten(#9DD558, 5%);
+    }
+
+  &:active {
+      background-color: darken(#9DD558, 5%);
     }
   }
 }
