@@ -3,7 +3,6 @@ import { Route, Routes } from 'react-router-dom';
 import axios from 'axios';
 import Header from './components/Header';
 import Drawer from './components/Drawer';
-
 import Home from './pages/Home'; 
 import Favorites from './pages/Favorites'; 
 
@@ -13,26 +12,35 @@ function App() {
   const [items, setItems] = React.useState([]);
   const [cartItems, setCartItems] = React.useState([]);
   const [favorites, setFavorites] = React.useState([]);
-
   const [searchValue, setSearchValue] = React.useState(""); 
-
   const [cartOpened, setcartOpened] = React.useState(false);
 
   React.useEffect(() => {
-    axios.get('https://64ca40f4700d50e3c704962b.mockapi.io/items').then((res) => {
-      setItems(res.data);
-    });
-    axios.get('https://64ca40f4700d50e3c704962b.mockapi.io/cart').then((res) => {
-      setCartItems(res.data);
-    });
-    axios.get('https://64d394e267b2662bf3dc75a6.mockapi.io/favorites').then((res) => {
-      setFavorites(res.data);
-    });
+    async function fetchData() {
+      const cartResponce = await axios.get('https://64ca40f4700d50e3c704962b.mockapi.io/cart');
+      const favoritesResponce = await axios.get('https://64d394e267b2662bf3dc75a6.mockapi.io/favorites');
+      const itemsResponce = await axios.get('https://64ca40f4700d50e3c704962b.mockapi.io/items');
+
+      setCartItems(cartResponce.data);
+      setFavorites(favoritesResponce.data);
+      setItems(itemsResponce.data);
+    }
+
+    fetchData();
   }, []);
 
   const onAddToCart = (obj) => {
-    axios.post('https://64ca40f4700d50e3c704962b.mockapi.io/cart', obj);
-    setCartItems((prev) => [...prev, obj]);
+    try {
+      if (cartItems.find((item) => Number(item.id) === Number(obj.id))) {
+        axios.delete(`https://64ca40f4700d50e3c704962b.mockapi.io/cart/${obj.id}`);
+        setCartItems((prev) => prev.filter(item => Number(item.id) !== Number(obj.id)));
+      } else {
+        axios.post('https://64ca40f4700d50e3c704962b.mockapi.io/cart', obj);
+        setCartItems((prev) => [...prev, obj]);
+      }
+    } catch (error) {
+      alert('Что-то пошло не так, kurwa!!!');
+    }
   }
 
   const onRemoveItem = (id) => {
@@ -71,6 +79,7 @@ function App() {
         <Route
           path="/"
           element={<Home 
+            cartItems={cartItems}
             items={items}
             searchValue={searchValue}
             setSearchValue={setSearchValue}
