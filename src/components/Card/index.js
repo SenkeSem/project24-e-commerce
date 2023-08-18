@@ -5,7 +5,7 @@ import AppContext from '../../context';
 
 
 
-function Card({id, title, price, imageUrl, onFavorite, onPlus, favorited = false, added = false, loading = false}) {
+function Card({id, title, price, imageUrl, onFavorite, onPlus, favorited = false, loading = false}) {
 
   const { isItemAdded } = React.useContext(AppContext);
   const [isFavorite, setIsFavorite] = React.useState(favorited);
