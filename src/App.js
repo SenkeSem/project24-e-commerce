@@ -6,6 +6,7 @@ import Drawer from './components/Drawer';
 import Home from './pages/Home'; 
 import Favorites from './pages/Favorites'; 
 import AppContext from './context';
+import Orders from './pages/Orders';
 
 function App() {
 
@@ -103,6 +104,14 @@ function App() {
           <Route
             path="/favorites"
             element={<Favorites />}
+            exact
+          />
+        </Routes>
+        
+        <Routes>
+          <Route
+            path="/orders"
+            element={<Orders />}
             exact
           />
         </Routes>
