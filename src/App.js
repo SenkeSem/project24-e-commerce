@@ -2,9 +2,9 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import axios from 'axios';
 import Header from './components/Header';
-import Drawer from './components/Drawer';
-import Home from './pages/Home'; 
-import Favorites from './pages/Favorites'; 
+import Drawer from './components/Drawer/index';
+import Home from './pages/Home';
+import Favorites from './pages/Favorites';
 import AppContext from './context';
 import Orders from './pages/Orders';
 
@@ -13,42 +13,53 @@ function App() {
   const [items, setItems] = React.useState([]);
   const [cartItems, setCartItems] = React.useState([]);
   const [favorites, setFavorites] = React.useState([]);
-  const [searchValue, setSearchValue] = React.useState(""); 
+  const [searchValue, setSearchValue] = React.useState("");
   const [cartOpened, setcartOpened] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     async function fetchData() {
-      const cartResponce = await axios.get('https://64ca40f4700d50e3c704962b.mockapi.io/cart');
-      const favoritesResponce = await axios.get('https://64d394e267b2662bf3dc75a6.mockapi.io/favorites');
-      const itemsResponce = await axios.get('https://64ca40f4700d50e3c704962b.mockapi.io/items');
-      setIsLoading(false);
+      try {
+        const cartResponce = await axios.get('https://64ca40f4700d50e3c704962b.mockapi.io/cart');
+        const favoritesResponce = await axios.get('https://64d394e267b2662bf3dc75a6.mockapi.io/favorites');
+        const itemsResponce = await axios.get('https://64ca40f4700d50e3c704962b.mockapi.io/items');
 
-      setCartItems(cartResponce.data);
-      setFavorites(favoritesResponce.data);
-      setItems(itemsResponce.data);
+        setIsLoading(false);
+        setCartItems(cartResponce.data);
+        setFavorites(favoritesResponce.data);
+        setItems(itemsResponce.data);
+      } catch (error) {
+        alert('Произошла ошибка при запросе данных с серверу!!! (функция fetchData)');
+        console.error(error);
+      }
     }
 
     fetchData();
   }, []);
 
-  const onAddToCart = (obj) => {
+  const onAddToCart = async (obj) => {
     try {
       if (cartItems.find((item) => Number(item.id) === Number(obj.id))) {
-        axios.delete(`https://64ca40f4700d50e3c704962b.mockapi.io/cart/${obj.id}`);
         setCartItems((prev) => prev.filter(item => Number(item.id) !== Number(obj.id)));
+        await axios.delete(`https://64ca40f4700d50e3c704962b.mockapi.io/cart/${obj.id}`);
       } else {
-        axios.post('https://64ca40f4700d50e3c704962b.mockapi.io/cart', obj);
         setCartItems((prev) => [...prev, obj]);
+        await axios.post('https://64ca40f4700d50e3c704962b.mockapi.io/cart', obj);
       }
     } catch (error) {
-      alert('Что-то пошло не так, kurwa!!!');
+      alert('Что-то пошло не так при добавлении товара в корзину, kurwa!!!');
+      console.error(error);
     }
   }
 
-  const onRemoveItem = (id) => {
-    axios.delete(`https://64ca40f4700d50e3c704962b.mockapi.io/cart/${id}`);
-    setCartItems((prev) => prev.filter(item => item.id !== id));
+  const onRemoveItem = async (id) => {
+    try {
+      await axios.delete(`https://64ca40f4700d50e3c704962b.mockapi.io/cart/${id}`);
+      setCartItems((prev) => prev.filter(item => Number(item.id) !== Number(id)));
+    } catch (error) {
+      alert('Ошибка при удалении товара из корзины!');
+      console.error(error);
+    }
   }
 
   const onAddToFavorite = async (obj) => {
@@ -62,6 +73,7 @@ function App() {
       }
     } catch (error) {
       alert('Не удалось добавить в фавориты, kurwa!!!');
+      console.error(error);
     }
   }
 
@@ -74,13 +86,20 @@ function App() {
   }
 
   const isItemAdded = (id) => {
-    return cartItems.some(obj => Number(obj.id) === Number(id));
+    return cartItems.some(obj => Number(obj.parentId) === Number(id));
   }
 
   return (
-    <AppContext.Provider value={{items, cartItems, favorites, isItemAdded, onAddToFavorite, setcartOpened, setCartItems}}>
+    <AppContext.Provider value={{ items, cartItems, favorites, isItemAdded, onAddToFavorite, onAddToCart, setcartOpened, setCartItems }}>
       <div className="wrapper clear">
-        {cartOpened && <Drawer items={cartItems} onClose={() => setcartOpened(false)} onRemove={onRemoveItem} />}
+
+        <Drawer
+          items={cartItems}
+          onClose={() => setcartOpened(false)}
+          onRemove={onRemoveItem}
+          opened={cartOpened}
+        />
+
         <Header onClickCart={() => setcartOpened(true)} />
 
         <Routes>
@@ -107,7 +126,7 @@ function App() {
             exact
           />
         </Routes>
-        
+
         <Routes>
           <Route
             path="/orders"

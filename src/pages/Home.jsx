@@ -26,6 +26,7 @@ function Home({
         onFavorite={(obj) => onAddToFavorite(obj)}
         onPlus={(obj) => onAddToCart(obj)}
         loading={isLoading}
+        {...item}
       />
     ));
   };
