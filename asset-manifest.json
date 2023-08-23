@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/project24-e-commerce/static/css/main.ab574734.css",
-    "main.js": "/project24-e-commerce/static/js/main.eafdd01c.js",
+    "main.js": "/project24-e-commerce/static/js/main.e3ccb7eb.js",
     "index.html": "/project24-e-commerce/index.html",
     "main.ab574734.css.map": "/project24-e-commerce/static/css/main.ab574734.css.map",
-    "main.eafdd01c.js.map": "/project24-e-commerce/static/js/main.eafdd01c.js.map"
+    "main.e3ccb7eb.js.map": "/project24-e-commerce/static/js/main.e3ccb7eb.js.map"
   },
   "entrypoints": [
     "static/css/main.ab574734.css",
-    "static/js/main.eafdd01c.js"
+    "static/js/main.e3ccb7eb.js"
   ]
 }
