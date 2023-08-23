@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/project24-e-commerce/static/css/main.ab574734.css",
+    "main.js": "/project24-e-commerce/static/js/main.2abda7ee.js",
+    "index.html": "/project24-e-commerce/index.html",
+    "main.ab574734.css.map": "/project24-e-commerce/static/css/main.ab574734.css.map",
+    "main.2abda7ee.js.map": "/project24-e-commerce/static/js/main.2abda7ee.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ab574734.css",
+    "static/js/main.2abda7ee.js"
+  ]
+}
