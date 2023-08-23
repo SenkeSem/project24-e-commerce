@@ -115,7 +115,7 @@ function App() {
 
         <Routes>
           <Route
-            path=""
+            path="project24-e-commerce"
             element={<Home
               cartItems={cartItems}
               items={items}
